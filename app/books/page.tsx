@@ -1,50 +1,47 @@
-import Image from "next/image";
+import BooksCatalog from "@/components/BooksCatalog";
+import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 
-export default async function BooksPage() {
-  const { data: books } = await supabase
-    .from("books")
-    .select("*")
-    .order("display_order");
+export default async function BooksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    category?: string;
+  }>;
+}) {
+  const { category } = await searchParams;
+
+let query = supabase
+  .from("books")
+  .select("*");
+
+if (category) {
+  query = query.eq("category_name", category);
+}
+
+const { data: books } = await query.order("display_order");
 
   return (
-    <main className="min-h-screen p-10">
-      <h1 className="text-4xl font-bold mb-8">
-        Our Books
-      </h1>
+    <>
+      <Navbar />
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {books?.map((book) => (
-          <div
-  key={book.id}
-  className="border rounded-xl p-5 shadow-sm"
->
-  {book.cover_path && (
-    <Image
-      src={book.cover_path}
-      alt={book.title}
-      width={250}
-      height={350}
-      className="rounded-lg mb-4 w-full h-auto"
-    />
-  )}
+      <main className="max-w-6xl mx-auto px-6 py-6 bg-gray-50 min-h-screen">
+        <div className="mb-10">
+  <h1 className="text-4xl font-bold text-gray-900">
+  {category
+    ? `${category} Books`
+    : "Our Books"}
+</h1>
 
-  <h2 className="font-semibold mb-2">
-    {book.title}
-  </h2>
-
-  <p className="text-sm mb-3">
-    {book.category_name}
-  </p>
-
-  <p>
-    {book.in_stock
-      ? "✅ In Stock"
-      : "❌ Out of Stock"}
-  </p>
+  <p className="text-lg text-gray-600">
+  {category
+    ? `Browse our ${category.toLowerCase()} collection.`
+    : "Browse all of our Educational Books for Nursery & Primary Schools."}
+</p>
 </div>
-        ))}
-      </div>
-    </main>
+
+        <BooksCatalog books={books || []} />
+      </main>
+    </>
   );
 }

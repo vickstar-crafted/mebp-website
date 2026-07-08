@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 
 export default async function Home() {
@@ -6,6 +7,9 @@ export default async function Home() {
     .select("*");
 
   return (
+  <>
+    <Navbar />
+
     <main className="min-h-screen">
       <section className="p-12 text-center">
         <h1 className="text-5xl font-bold mb-4">
@@ -42,5 +46,6 @@ export default async function Home() {
         </div>
       </section>
     </main>
+</>
   );
 }
