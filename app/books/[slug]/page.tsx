@@ -1,10 +1,9 @@
 import AddToCart from "@/components/AddToCart";
 import Image from "next/image";
-import { Tag } from "lucide-react";
+import { Tag, CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
-import { CircleCheckBig } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function BookDetailsPage({
@@ -28,109 +27,141 @@ export default async function BookDetailsPage({
     <>
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-6 py-10 bg-gray-50 min-h-screen">
-  <div className="grid md:grid-cols-2 gap-10">
+      <main className="min-h-screen bg-gray-50">
+        <div className="mx-auto grid max-w-5xl gap-10 px-6 py-10 md:grid-cols-2">
+          
+          {/* Book Cover */}
+          <div>
+            <Image
+              src={`https://opigtrpgtyssktfybqqy.supabase.co/storage/v1/object/public/book-covers/${book.slug}.jpg`}
+              alt={book.title}
+              width={400}
+              height={560}
+              className="
+                rounded-xl
+                border
+                shadow-lg
+                transition-shadow
+                duration-300
+                hover:shadow-xl
+              "
+            />
+          </div>
 
-    <div>
-  <Image
-    src={`https://opigtrpgtyssktfybqqy.supabase.co/storage/v1/object/public/book-covers/${book.slug}.jpg`}
-    alt={book.title}
-    width={400}
-    height={560}
-    className="
-rounded-xl
-border
-shadow-lg
-hover:shadow-xl
-transition-shadow
-duration-300
-"
-  />
-</div>
-    <div>
-      <Link
-  href={`/books?category=${encodeURIComponent(book.category_name)}`}
-  className="
-    inline-flex
-    items-center
-    gap-2
+          {/* Book Information */}
+          <div>
+            {/* Category */}
+            <Link
+              href={`/books?category=${encodeURIComponent(
+                book.category_name
+              )}`}
+              className="
+                inline-flex
+                items-center
+                gap-2
+                font-medium
+                text-green-700
+                transition-colors
+                duration-200
+                hover:text-green-800
+                hover:underline
+              "
+            >
+              <Tag size={16} />
+              {book.category_name}
+            </Link>
 
-    text-green-700
+            {/* Title */}
+            <h1 className="mb-4 text-3xl font-bold text-gray-900">
+              {book.title}
+            </h1>
 
-    font-medium
+            {/* Book Details */}
+            <div className="mb-8 rounded-xl border bg-white p-5 shadow-sm">
+              <div className="grid grid-cols-1 gap-5">
+                
+                {/* Publisher */}
+                <div>
+                  <p className="mb-1 text-xs uppercase tracking-widest text-gray-400">
+                    Publisher
+                  </p>
 
-    hover:text-green-800
+                  <p className="font-semibold text-gray-900">
+                    Model Educational Book Publishers Ltd.
+                  </p>
+                </div>
 
-    hover:underline
+                {/* Availability */}
+                <div>
+                  <p className="mb-1 text-xs uppercase tracking-wide text-gray-500">
+                    Availability
+                  </p>
 
-    transition-colors
+                  <div className="flex items-center gap-2">
+                    {book.in_stock ? (
+                      <>
+                        <CircleCheckBig
+                          size={14}
+                          className="text-green-600"
+                        />
 
-    duration-200
-  "
->
-  <Tag size={16} />
-  {book.category_name}
-</Link>
+                        <span className="font-semibold text-green-700">
+                          In Stock
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-4">
-        {book.title}
-      </h1>
+                        <span className="font-semibold text-red-600">
+                          Out of Stock
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
 
-      <div className="bg-white border rounded-xl p-5 mb-8 shadow-sm">
+                {/* Category */}
+                <div>
+                  <p className="mb-1 text-xs uppercase tracking-wide text-gray-500">
+                    Category
+                  </p>
 
-  <div className="grid grid-cols-1 gap-5">
+                  <p className="font-semibold text-gray-900">
+                    {book.category_name}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-    <div>
-      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">
-  Publisher
-</p>
-
-<p className="font-semibold text-gray-900">
-  Model Educational Book Publishers Ltd.
-</p>
-    </div>
-
-    <div>
-      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-        Availability
-      </p>
-
-      <div className="flex items-center gap-2">
-    <CircleCheckBig
-        size={14}
-        className="text-green-600"
-    />
-
-    <span className="font-semibold text-green-700">
-        In Stock
-    </span>
-</div>
-    </div>
-
-    <div>
-      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-        Category
-      </p>
-
-      <p className="font-semibold text-gray-900">
-        {book.category_name}
-      </p>
-    </div>
-
-  </div>
-
-</div>
-
-      <AddToCart
-  id={book.id}
-  title={book.title}
-  slug={book.slug}
-  category_name={book.category_name}
-/>
-    </div>
-
-  </div>
-</main>
+            {/* Add to Cart */}
+            {book.in_stock ? (
+              <AddToCart
+                id={book.id}
+                title={book.title}
+                slug={book.slug}
+                category_name={book.category_name}
+              />
+            ) : (
+              <button
+                disabled
+                className="
+                  w-full
+                  cursor-not-allowed
+                  rounded-xl
+                  bg-gray-200
+                  px-5
+                  py-3
+                  font-medium
+                  text-gray-500
+                "
+              >
+                Currently Out of Stock
+              </button>
+            )}
+          </div>
+        </div>
+      </main>
     </>
   );
 }

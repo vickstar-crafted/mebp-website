@@ -1,7 +1,9 @@
 "use client";
 
-import { Trash2, CircleCheckBig, Copy } from "lucide-react";
+import { Trash2, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
 
 type CheckoutSuccessModalProps = {
   open: boolean;
@@ -18,8 +20,6 @@ export default function CheckoutSuccessModal({
 }: CheckoutSuccessModalProps) {
   const router = useRouter();
 
-  if (!open) return null;
-
   const copyReference = async () => {
     try {
       await navigator.clipboard.writeText(orderReference);
@@ -30,127 +30,75 @@ export default function CheckoutSuccessModal({
   };
 
   return (
-    <div
-      className="
-        fixed
-        inset-0
-        bg-black/40
-        backdrop-blur-sm
-        flex
-        items-center
-        justify-center
-        z-50
-        animate-in
-        fade-in
-        duration-300
-      "
+    <Modal
+      open={open}
+      onClose={onContinue}
     >
-      <div
-        className="
-          bg-white
-          rounded-2xl
-          shadow-2xl
-          p-8
-          w-[90%]
-          max-w-md
-          animate-in
-          zoom-in-95
-          fade-in
-        "
-      >
-        <div className="flex justify-center mb-5">
-          <CircleCheckBig
-            size={58}
-            className="text-green-600"
-          />
-        </div>
+      <h2 className="mb-2 text-center text-2xl font-bold">
+        Order Submitted
+      </h2>
 
-        <h2 className="text-2xl font-bold text-center mb-2">
-          Order Submitted
-        </h2>
+      <p className="text-center text-gray-600">
+        Your order has been saved successfully.
+      </p>
 
-        <p className="text-gray-600 text-center">
-          Your order has been saved successfully.
+      <div className="mt-6 mb-6 rounded-xl border border-green-200 bg-green-50 p-4">
+        <p className="text-center text-sm text-gray-600">
+          Order Reference
         </p>
 
-        <div className="mt-6 mb-6 rounded-xl bg-green-50 border border-green-200 p-4">
-          <p className="text-sm text-gray-600 text-center">
-            Order Reference
-          </p>
+        <p className="mt-2 break-all text-center text-xl font-bold text-green-700">
+          {orderReference}
+        </p>
 
-          <p className="font-bold text-xl text-center text-green-700 break-all mt-2">
-            {orderReference}
-          </p>
-
-          <button
-            onClick={copyReference}
-            className="
-              mt-4
-              w-full
-              border
-              rounded-lg
-              py-2
-              hover:bg-gray-100
-              transition
-              flex
-              items-center
-              justify-center
-              gap-2
-            "
-          >
+        <Button
+          type="button"
+          variant="outline"
+          fullWidth
+          onClick={copyReference}
+          className="mt-4"
+        >
+          <span className="flex items-center justify-center gap-2">
             <Copy size={16} />
             Copy Reference
-          </button>
-        </div>
-
-        <p className="text-sm text-gray-600 text-center mb-8">
-          A WhatsApp chat has been opened with your order details.
-
-          <br />
-          <br />
-
-          Please send the message to complete your order.
-        </p>
-
-        <div className="space-y-3">
-          <button
-            onClick={() => {
-              onContinue();
-              router.push("/books");
-            }}
-            className="
-              w-full
-              border
-              rounded-xl
-              py-3
-              hover:bg-gray-100
-              active:scale-[0.98]
-              transition-all
-            "
-          >
-            Continue Shopping
-          </button>
-
-          <button
-            onClick={onClearCart}
-            className="
-              w-full
-              bg-red-600
-              text-white
-              py-3
-              rounded-xl
-              hover:bg-red-700
-              active:scale-[0.98]
-              transition-all
-            "
-          >
-            <div className="flex items-center justify-center gap-2">
-              <Trash2 size={18} />
-              <span>Clear Cart</span>
-            </div>
-          </button>
-        </div>
+          </span>
+        </Button>
       </div>
-    </div>
+
+      <p className="mb-8 text-center text-sm text-gray-600">
+        A WhatsApp chat has been opened with your order details.
+
+        <br />
+        <br />
+
+        Please send the message to complete your order.
+      </p>
+
+      <div className="space-y-3">
+        <Button
+          type="button"
+          variant="outline"
+          fullWidth
+          onClick={() => {
+            onContinue();
+            router.push("/books");
+          }}
+        >
+          Continue Shopping
+        </Button>
+
+        <Button
+          type="button"
+          variant="danger"
+          fullWidth
+          onClick={onClearCart}
+        >
+          <span className="flex items-center justify-center gap-2">
+            <Trash2 size={18} />
+            <span>Clear Cart</span>
+          </span>
+        </Button>
+      </div>
+    </Modal>
   );
 }

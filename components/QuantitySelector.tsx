@@ -31,38 +31,28 @@ export default function QuantitySelector({
   };
 
   return (
-    <div
-      className="
-        inline-flex
-        items-center
-        overflow-hidden
-        rounded-xl
-        border
-        bg-white
-        shadow-sm
-      "
-    >
+    <div className="inline-flex items-center rounded-xl border border-gray-200 bg-white overflow-hidden">
+      {/* Minus */}
       <button
+        type="button"
         onClick={() =>
           onChange(Math.max(min, quantity - 1))
         }
         className={`
-font-semibold
-
-hover:bg-gray-100
-
-active:scale-90
-
-transition-all
-
-duration-150
-
-${sizes[size].button}
-`}
+          ${sizes[size].button}
+          font-semibold
+          text-gray-900
+          hover:bg-gray-100
+          active:scale-90
+          transition-all
+          duration-150
+        `}
+        aria-label="Decrease quantity"
       >
         −
       </button>
 
+      {/* Quantity */}
       <input
         type="number"
         min={min}
@@ -76,43 +66,33 @@ ${sizes[size].button}
           )
         }
         className={`
-border-x
-
-text-center
-
-outline-none
-
-text-gray-900
-
-font-medium
-
-transition-all
-
-duration-150
-
-focus:scale-105
-
-${sizes[size].input}
-`}
+          border-x
+          border-gray-200
+          text-center
+          outline-none
+          text-gray-900
+          font-medium
+          ${sizes[size].input}
+        `}
+        aria-label="Quantity"
       />
 
+      {/* Plus */}
       <button
+        type="button"
         onClick={() =>
           onChange(quantity + 1)
         }
         className={`
-font-semibold
-
-hover:bg-gray-100
-
-active:scale-90
-
-transition-all
-
-duration-150
-
-${sizes[size].button}
-`}
+          ${sizes[size].button}
+          font-semibold
+          text-gray-900
+          hover:bg-gray-100
+          active:scale-90
+          transition-all
+          duration-150
+        `}
+        aria-label="Increase quantity"
       >
         +
       </button>

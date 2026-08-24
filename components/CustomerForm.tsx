@@ -1,139 +1,161 @@
 "use client";
 
 import { useCustomer } from "@/context/CustomerContext";
+
+import Label from "@/components/ui/Label";
+import Input from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
+import SectionTitle from "@/components/ui/SectionTitle";
+
 export default function CustomerForm() {
-    const {
-  customer,
-  updateCustomer,
-} = useCustomer();
+  const {
+    customer,
+    updateCustomer,
+    errors,
+  } = useCustomer();
+
   return (
-    <div className="mb-8">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+    <div>
+      <SectionTitle>
         Customer Information
-      </h3>
+      </SectionTitle>
 
       <div className="space-y-4">
-        <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Full Name <span className="text-red-500">*</span>
-  </label>
 
-  <input
-    type="text"
-    required
-    placeholder="Enter your full name"
-    value={customer.name}
-    onChange={(e) =>
-      updateCustomer({
-        name: e.target.value,
-      })
-    }
-    className="
-      w-full
-      border
-      rounded-xl
-      px-4
-      py-3
-      text-gray-900
-      focus:ring-2
-      focus:ring-green-600
-      outline-none
-    "
-  />
-</div>
+        {/* Full Name */}
 
         <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    School / Organisation
-    <span className="text-gray-400">
-      {" "}
-      (Optional)
-    </span>
-  </label>
+          <Label>
+            Full Name{" "}
+            <span className="text-red-500">
+              *
+            </span>
+          </Label>
 
-  <input
-    type="text"
-    placeholder="Enter school or organisation"
-    value={customer.school}
-    onChange={(e) =>
-      updateCustomer({
-        school: e.target.value,
-      })
-    }
-    className="
-      w-full
-      border
-      rounded-xl
-      px-4
-      py-3
-      text-gray-900
-      focus:ring-2
-      focus:ring-green-600
-      outline-none
-    "
-  />
-</div>
+          <Input
+            type="text"
+            placeholder="Enter your full name"
+            value={customer.name}
+            onChange={(e) =>
+              updateCustomer({
+                name: e.target.value,
+              })
+            }
+            className={
+              errors.name
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : ""
+            }
+          />
 
-        <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Phone Number <span className="text-red-500">*</span>
-  </label>
+          {errors.name && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.name}
+            </p>
+          )}
+        </div>
 
-  <input
-    type="tel"
-    required
-    placeholder="Enter your phone number"
-    value={customer.phone}
-    onChange={(e) =>
-      updateCustomer({
-        phone: e.target.value,
-      })
-    }
-    className="
-      w-full
-      border
-      rounded-xl
-      px-4
-      py-3
-      text-gray-900
-      focus:ring-2
-      focus:ring-green-600
-      outline-none
-    "
-  />
-</div>
+        {/* School / Organisation */}
 
         <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Delivery Address
-    <span className="text-gray-400">
-      {" "}
-      (Optional)
-    </span>
-  </label>
+          <Label>
+            School / Organisation
+            <span className="text-gray-400">
+              {" "}
+              (Optional)
+            </span>
+          </Label>
 
-  <textarea
-    rows={4}
-    placeholder="Enter delivery address"
-    value={customer.address}
-    onChange={(e) =>
-      updateCustomer({
-        address: e.target.value,
-      })
-    }
-    className="
-      w-full
-      border
-      rounded-xl
-      px-4
-      py-3
-      text-gray-900
-      focus:ring-2
-      focus:ring-green-600
-      outline-none
-    "
-  />
-</div>
+          <Input
+            type="text"
+            placeholder="Enter school or organisation"
+            value={customer.school}
+            onChange={(e) =>
+              updateCustomer({
+                school: e.target.value,
+              })
+            }
+            className={
+              errors.school
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : ""
+            }
+          />
+
+          {errors.school && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.school}
+            </p>
+          )}
+        </div>
+
+        {/* Phone Number */}
+
+        <div>
+          <Label>
+            Phone Number{" "}
+            <span className="text-red-500">
+              *
+            </span>
+          </Label>
+
+          <Input
+            type="tel"
+            inputMode="numeric"
+            placeholder="e.g. 08033961238"
+            value={customer.phone}
+            onChange={(e) =>
+              updateCustomer({
+                phone: e.target.value,
+              })
+            }
+            className={
+              errors.phone
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : ""
+            }
+          />
+
+          {errors.phone && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.phone}
+            </p>
+          )}
+        </div>
+
+        {/* Delivery Address */}
+
+        <div>
+          <Label>
+            Delivery Address{" "}
+            <span className="text-red-500">
+              *
+            </span>
+          </Label>
+
+          <Textarea
+            rows={4}
+            placeholder="Enter delivery address"
+            value={customer.address}
+            onChange={(e) =>
+              updateCustomer({
+                address: e.target.value,
+              })
+            }
+            className={
+              errors.address
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : ""
+            }
+          />
+
+          {errors.address && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.address}
+            </p>
+          )}
+        </div>
+
       </div>
     </div>
   );

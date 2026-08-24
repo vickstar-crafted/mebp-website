@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 
+import Label from "@/components/ui/Label";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
 export default function AdminLoginPage() {
   const supabase = createClient();
   const router = useRouter();
@@ -12,22 +16,18 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
 
-  async function handleLogin(
-    e: React.FormEvent
-  ) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
     setLoading(true);
     setError("");
 
-    const { error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     setLoading(false);
 
@@ -36,74 +36,60 @@ export default function AdminLoginPage() {
       return;
     }
 
-router.push("/admin");
+    router.push("/admin");
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-6">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl border">
-
-        <h1 className="text-3xl font-bold text-center text-green-700 mb-2">
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+        <h1 className="mb-2 text-center text-3xl font-bold text-green-700">
           MEBP Admin
         </h1>
 
-        <p className="text-center text-gray-500 mb-8">
+        <p className="mb-8 text-center text-gray-600">
           Sign in to manage bookstore orders
         </p>
 
-        <form
-          onSubmit={handleLogin}
-          className="space-y-5"
-        >
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block mb-2 font-medium">
-              Email
-            </label>
+            <Label htmlFor="email">Email</Label>
 
-            <input
+            <Input
+              id="email"
               type="email"
               required
               value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label className="block mb-2 font-medium">
-              Password
-            </label>
+            <Label htmlFor="password">Password</Label>
 
-            <input
+            <Input
+              id="password"
               type="password"
               required
               value={password}
-              onChange={(e) =>
-                setPassword(
-                  e.target.value
-                )
-              }
-              className="w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
             />
           </div>
 
           {error && (
-            <p className="text-red-600 text-sm">
+            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
               {error}
             </p>
           )}
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-green-700 py-3 font-medium text-white hover:bg-green-800 disabled:bg-gray-400"
+            className="w-full"
           >
-            {loading
-              ? "Signing In..."
-              : "Sign In"}
-          </button>
+            {loading ? "Signing In..." : "Sign In"}
+          </Button>
         </form>
       </div>
     </main>

@@ -3,7 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { CircleCheckBig } from "lucide-react";
+import {
+  CircleCheckBig,
+  Search,
+  X,
+} from "lucide-react";
+
 import QuickAddButton from "./QuickAddButton";
 import QuickAddModal from "./QuickAddModal";
 import CartToast from "./CartToast";
@@ -33,8 +38,12 @@ export default function BooksCatalog({
 
   const categories = [
     "All",
-    ...new Set(
-      books.map((book) => book.category_name)
+    ...Array.from(
+      new Set(
+        books
+          .map((book) => book.category_name)
+          .filter(Boolean)
+      )
     ),
   ];
 
@@ -54,8 +63,12 @@ export default function BooksCatalog({
   return (
     <>
       {/* Search */}
+      <div className="relative mb-6">
+        <Search
+          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+        />
 
-      <div className="mb-6 relative">
         <input
           type="text"
           placeholder="Search books by title..."
@@ -65,12 +78,13 @@ export default function BooksCatalog({
           }
           className="
             w-full
-            bg-white
-            border
             rounded-xl
-            px-4
-            pr-12
+            border
+            border-gray-200
+            bg-white
             py-3
+            pl-11
+            pr-12
             text-sm
             text-gray-900
             placeholder:text-gray-500
@@ -82,49 +96,37 @@ export default function BooksCatalog({
 
         {searchTerm && (
           <button
+            type="button"
             onClick={() => setSearchTerm("")}
+            aria-label="Clear search"
             className="
-absolute
-
-right-3
-
-top-1/2
-
--translate-y-1/2
-
-text-gray-400
-
-hover:text-red-500
-
-text-lg
-
-font-bold
-
-transition-all
-
-duration-150
-
-active:scale-90
-"
+              absolute
+              right-3
+              top-1/2
+              -translate-y-1/2
+              text-gray-400
+              transition
+              hover:text-red-500
+            "
           >
-            ×
+            <X size={18} />
           </button>
         )}
       </div>
 
       {/* Categories */}
-
-      <div className="flex flex-wrap gap-3 mb-8">
+      <div className="mb-8 flex flex-wrap gap-3">
         {categories.map((category) => (
           <button
             key={category}
+            type="button"
             onClick={() =>
               setSelectedCategory(category)
             }
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
               selectedCategory === category
-                ? "bg-green-700 text-white"
-                : "bg-white border text-gray-700 hover:border-green-700 hover:text-green-700"
+                ? "bg-green-700 text-white shadow-sm"
+                : "border border-gray-200 bg-white text-gray-700 hover:border-green-700 hover:text-green-700"
             }`}
           >
             {category}
@@ -133,121 +135,159 @@ active:scale-90
       </div>
 
       {/* Books */}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {filteredBooks.map((book) => (
-          <div
-            key={book.id}
-            className="
-group
-
-bg-white
-
-rounded-2xl
-
-overflow-hidden
-
-border
-
-shadow-sm
-
-hover:-translate-y-2
-
-hover:shadow-2xl
-
-transition-all
-
-duration-300
-
-ease-out
-
-flex
-
-flex-col
-"
-          >
-            <Image
-              src={`https://opigtrpgtyssktfybqqy.supabase.co/storage/v1/object/public/book-covers/${book.slug}.jpg`}
-              alt={book.title}
-              width={300}
-              height={420}
+      {filteredBooks.length > 0 ? (
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredBooks.map((book) => (
+            <div
+              key={book.id}
               className="
-w-full
-
-object-cover
-
-transition-transform
-
-duration-500
-
-group-hover:scale-105
-"
-            />
-
-            <div className="p-5 flex flex-col flex-grow">
-
-              <p className="text-xs text-blue-600 font-medium mb-2">
-                {book.category_name}
-              </p>
-
-              <h2 className="font-semibold text-gray-900 text-sm leading-5 mb-3 min-h-[60px]">
-                {book.title}
-              </h2>
-
-              <div className="flex items-center gap-2 mb-4">
-    <CircleCheckBig
-        size={14}
-        className="text-green-600"
-    />
-
-    <span className="text-green-600 text-sm font-medium">
-        In Stock
-    </span>
-</div>
-
-              <div className="mt-auto flex flex-col gap-3">
-
-                <Link
-                  href={`/books/${book.slug}`}
+                group
+                flex
+                flex-col
+                overflow-hidden
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+                shadow-sm
+                transition-all
+                duration-300
+                ease-out
+                hover:-translate-y-2
+                hover:shadow-xl
+              "
+            >
+              <div className="overflow-hidden bg-gray-100">
+                <Image
+  src={`https://opigtrpgtyssktfybqqy.supabase.co/storage/v1/object/public/book-covers/${book.slug}.jpg`}
+  alt={book.title}
+  width={300}
+  height={420}
+  unoptimized
                   className="
+                    h-auto
                     w-full
-                    text-center
-                    bg-green-700
-                    text-white
-                    px-3
-                    py-2
-                    rounded-xl
-                    text-sm
-                    hover:bg-green-800
-
-active:scale-[0.98]
-
-transition-all
-
-duration-200
+                    object-cover
+                    transition-transform
+                    duration-500
+                    group-hover:scale-105
                   "
-                >
-                  View Details
-                </Link>
-
-                <QuickAddButton
-                  book={book}
-                  onQuickAdd={(selected) => {
-                    setSelectedBook(selected);
-                    setShowQuickAdd(true);
-                  }}
                 />
-
               </div>
 
+              <div className="flex flex-grow flex-col p-5">
+                <p className="mb-2 text-xs font-medium text-green-700">
+                  {book.category_name}
+                </p>
+
+                <h2 className="mb-3 min-h-[60px] text-sm font-semibold leading-5 text-gray-900">
+                  {book.title}
+                </h2>
+
+                {/* Stock Status */}
+                <div className="mb-4 flex items-center gap-2">
+                  {book.in_stock ? (
+                    <>
+                      <CircleCheckBig
+                        size={14}
+                        className="text-green-600"
+                      />
+
+                      <span className="text-sm font-medium text-green-600">
+                        In Stock
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="h-2 w-2 rounded-full bg-red-500" />
+
+                      <span className="text-sm font-medium text-red-600">
+                        Out of Stock
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-auto flex flex-col gap-3">
+                  <Link
+                    href={`/books/${book.slug}`}
+                    className="
+                      w-full
+                      rounded-xl
+                      bg-green-700
+                      px-3
+                      py-2.5
+                      text-center
+                      text-sm
+                      font-medium
+                      text-white
+                      transition-all
+                      duration-200
+                      hover:bg-green-800
+                      active:scale-[0.98]
+                    "
+                  >
+                    View Details
+                  </Link>
+
+                  {book.in_stock ? (
+                    <QuickAddButton
+                      book={book}
+                      onQuickAdd={(selected) => {
+                        setSelectedBook(selected);
+                        setShowQuickAdd(true);
+                      }}
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      className="
+                        w-full
+                        cursor-not-allowed
+                        rounded-xl
+                        bg-gray-200
+                        px-3
+                        py-2.5
+                        text-sm
+                        font-medium
+                        text-gray-500
+                      "
+                    >
+                      Out of Stock
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+          <h2 className="text-xl font-semibold text-gray-900">
+            No books found
+          </h2>
 
-          </div>
-        ))}
-      </div>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-600">
+            We could not find any books matching your search or selected
+            category.
+          </p>
 
-      {/* ONE Modal */}
+          <button
+            type="button"
+            onClick={() => {
+              setSearchTerm("");
+              setSelectedCategory("All");
+            }}
+            className="mt-6 rounded-xl bg-green-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-800"
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
 
+      {/* Quick Add Modal */}
       {selectedBook && (
         <QuickAddModal
           open={showQuickAdd}
@@ -274,8 +314,7 @@ duration-200
         />
       )}
 
-      {/* ONE Toast */}
-
+      {/* Cart Toast */}
       {toast && (
         <CartToast
           title={toast.title}

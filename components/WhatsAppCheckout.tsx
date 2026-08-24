@@ -1,23 +1,40 @@
 "use client";
 
 import { useState } from "react";
+
 import CheckoutSuccessModal from "./CheckoutSuccessModal";
 import { createOrder } from "@/lib/services/orders";
+
 import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 
 export default function WhatsAppCheckout() {
   const { cart, clearCart } = useCart();
 
-  const { customer, validateCustomer } = useCustomer();
+  const {
+    customer,
+    validateCustomer,
+    normalizePhoneNumber,
+    clearCustomer,
+  } = useCustomer();
 
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [orderReference, setOrderReference] = useState("");
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [orderReference, setOrderReference] =
+    useState("");
 
   async function handleCheckout() {
+    // Prevent duplicate orders while processing
     if (loading) return;
 
+    // Prevent checkout with an empty cart
+    if (cart.length === 0) return;
+
+    // Validate customer information
     const valid = validateCustomer();
 
     if (!valid) {
@@ -27,42 +44,89 @@ export default function WhatsAppCheckout() {
     setLoading(true);
 
     try {
+      /*
+        Normalize the phone number before
+        saving it to Supabase and displaying
+        it in the WhatsApp order.
+      */
+
+      const normalizedPhone =
+        normalizePhoneNumber(customer.phone);
+
+      /*
+        CREATE ORDER
+      */
+
       const order = await createOrder({
-        customerName: customer.name,
-        phone: customer.phone,
-        schoolName: customer.school,
-        location: customer.address,
+        customerName: customer.name.trim(),
+
+        phone: normalizedPhone,
+
+        schoolName:
+          customer.school.trim(),
+
+        location:
+          customer.address.trim(),
+
         totalBooks: cart.length,
+
         totalCopies: cart.reduce(
-          (sum, item) => sum + item.quantity,
+          (sum, item) =>
+            sum + item.quantity,
           0
         ),
+
         items: cart.map((item) => ({
           id: item.id,
           quantity: item.quantity,
         })),
       });
 
-      setOrderReference(order.order_reference);
+      /*
+        STORE ORDER REFERENCE
+      */
 
-      console.log("Order:", order);
+      const reference =
+        order.order_reference;
 
-      const orderReference = order.order_reference;
+      setOrderReference(reference);
+
+      console.log(
+        "Order created:",
+        order
+      );
+
+      /*
+        CREATE DATE AND TIME
+      */
 
       const now = new Date();
 
-      const orderDate = now.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
+      const orderDate =
+        now.toLocaleDateString(
+          "en-GB",
+          {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }
+        );
 
-      const orderTime = now.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      const orderTime =
+        now.toLocaleTimeString(
+          "en-GB",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        );
 
-      let message = `Hello Model Educational Book Publishers,
+      /*
+        BUILD WHATSAPP MESSAGE
+      */
+
+      let message =
+        `Hello Model Educational Book Publishers,
 
 I would like to place the following order.
 
@@ -71,7 +135,7 @@ I would like to place the following order.
 ORDER DETAILS
 
 Order Reference:
-${orderReference}
+${reference}
 
 Order Date:
 ${orderDate}
@@ -85,6 +149,10 @@ BOOKS ORDERED
 
 `;
 
+      /*
+        ADD EACH BOOK
+      */
+
       cart.forEach((item, index) => {
         message += `${index + 1}.
 
@@ -95,12 +163,24 @@ Quantity: ${item.quantity}
 `;
       });
 
-      const totalCopies = cart.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      );
+      /*
+        CALCULATE TOTAL COPIES
+      */
 
-      message += `━━━━━━━━━━━━━━━━━━━━━━
+      const totalCopies =
+        cart.reduce(
+          (sum, item) =>
+            sum + item.quantity,
+          0
+        );
+
+      /*
+        ADD ORDER SUMMARY AND
+        CUSTOMER INFORMATION
+      */
+
+      message +=
+        `━━━━━━━━━━━━━━━━━━━━━━
 
 ORDER SUMMARY
 
@@ -115,16 +195,16 @@ ${totalCopies}
 CUSTOMER INFORMATION
 
 Name:
-${customer.name}
+${customer.name.trim()}
 
 Phone:
-${customer.phone}
+${normalizedPhone}
 
 School / Organisation:
-${customer.school || "Not provided"}
+${customer.school.trim() || "Not provided"}
 
 Delivery Address:
-${customer.address || "Not provided"}
+${customer.address.trim()}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -132,20 +212,48 @@ Thank you.
 
 Regards,
 
-${customer.name}
+${customer.name.trim()}
 `;
 
-      const phoneNumber = "2348033961238";
+      /*
+        MEBP WHATSAPP BUSINESS NUMBER
 
-      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-        message
-      )}`;
+        This number is where the completed
+        order message will be sent.
+      */
 
-      window.open(url, "_blank");
+      const phoneNumber =
+        "2348033961238";
+
+      /*
+        CREATE WHATSAPP URL
+      */
+
+      const url =
+        `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+          message
+        )}`;
+
+      /*
+        OPEN WHATSAPP
+      */
+
+      window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+      /*
+        SHOW SUCCESS MODAL
+      */
 
       setShowModal(true);
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Checkout error:",
+        error
+      );
 
       alert(
         "Sorry, we couldn't process your order. Please try again."
@@ -158,22 +266,25 @@ ${customer.name}
   return (
     <>
       <button
+        type="button"
         onClick={handleCheckout}
-        disabled={cart.length === 0 || loading}
+        disabled={
+          cart.length === 0 || loading
+        }
         className={`
-w-full
-py-3
-rounded-xl
-text-white
-font-medium
-transition-all
-duration-200
-${
-  cart.length === 0 || loading
-    ? "bg-gray-400 cursor-not-allowed"
-    : "bg-green-700 hover:bg-green-800 active:scale-[0.98]"
-}
-`}
+          w-full
+          rounded-xl
+          py-3
+          font-medium
+          text-white
+          transition-all
+          duration-200
+          ${
+            cart.length === 0 || loading
+              ? "cursor-not-allowed bg-gray-400"
+              : "bg-green-700 hover:bg-green-800 active:scale-[0.98]"
+          }
+        `}
       >
         {loading
           ? "Processing Order..."
@@ -183,9 +294,12 @@ ${
       <CheckoutSuccessModal
         open={showModal}
         orderReference={orderReference}
-        onContinue={() => setShowModal(false)}
+        onContinue={() =>
+          setShowModal(false)
+        }
         onClearCart={() => {
           clearCart();
+          clearCustomer();
           setShowModal(false);
         }}
       />
