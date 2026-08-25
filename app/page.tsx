@@ -1,8 +1,44 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, ArrowRight, GraduationCap } from "lucide-react";
+import {
+  BookOpen,
+  ArrowRight,
+  GraduationCap,
+} from "lucide-react";
 
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
+
+export const metadata: Metadata = {
+  title:
+    "Quality Educational Books for Nursery and Primary Schools in Nigeria",
+
+  description:
+    "Explore quality and affordable educational books for nursery and primary school learners in Nigeria. Model Educational Book Publishers Limited offers books designed to support learning, creativity and academic excellence.",
+
+  alternates: {
+    canonical: "/",
+  },
+
+  openGraph: {
+    title:
+      "Quality Educational Books for Nursery and Primary Schools in Nigeria",
+    description:
+      "Explore quality and affordable educational books for nursery and primary school learners in Nigeria.",
+    url: "/",
+    siteName: "Model Educational Book Publishers",
+    locale: "en_NG",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "Quality Educational Books for Nursery and Primary Schools in Nigeria",
+    description:
+      "Explore quality and affordable educational books for nursery and primary school learners in Nigeria.",
+  },
+};
 
 export default async function Home() {
   const { data: categories } = await supabase
@@ -64,7 +100,6 @@ export default async function Home() {
           </div>
         </section>
 
-
         {/* ABOUT / INTRODUCTION */}
         <section className="mx-auto max-w-7xl px-6 py-20 md:px-10">
 
@@ -104,7 +139,6 @@ export default async function Home() {
               </Link>
 
             </div>
-
 
             {/* STATISTICS */}
             <div className="grid grid-cols-2 gap-4">
@@ -152,7 +186,6 @@ export default async function Home() {
 
         </section>
 
-
         {/* BOOK CATEGORIES */}
         <section className="border-y border-gray-200 bg-gray-50">
 
@@ -187,7 +220,6 @@ export default async function Home() {
               </Link>
 
             </div>
-
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
@@ -233,7 +265,6 @@ export default async function Home() {
 
         </section>
 
-
         {/* WHY MEBP */}
         <section className="mx-auto max-w-7xl px-6 py-20 md:px-10">
 
@@ -256,7 +287,6 @@ export default async function Home() {
 
           </div>
 
-
           <div className="mt-12 grid gap-6 md:grid-cols-3">
 
             <div className="rounded-2xl border border-gray-200 p-7">
@@ -272,7 +302,6 @@ export default async function Home() {
 
             </div>
 
-
             <div className="rounded-2xl border border-gray-200 p-7">
 
               <h3 className="text-xl font-bold text-gray-900">
@@ -285,7 +314,6 @@ export default async function Home() {
               </p>
 
             </div>
-
 
             <div className="rounded-2xl border border-gray-200 p-7">
 
@@ -303,7 +331,6 @@ export default async function Home() {
           </div>
 
         </section>
-
 
         {/* CTA */}
         <section className="bg-green-700">
