@@ -11,6 +11,7 @@ import {
 export default function ContactPage() {
   const phoneNumbers = [
     "08033961238",
+    "08023010713",
     "08029080363",
     "08051153359",
   ];
