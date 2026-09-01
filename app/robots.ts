@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/admin/"],
     },
-    sitemap: "https://mebpbooks.com/sitemap.xml",
+    sitemap: "https://www.mebpbooks.com/sitemap.xml",
   };
 }

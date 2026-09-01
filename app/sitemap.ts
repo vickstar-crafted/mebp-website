@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://mebpbooks.com";
+  const baseUrl = "https://www.mebpbooks.com";
 
   const staticPages = [
     {
@@ -31,9 +31,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const { data: books } = await supabase
+  const { data: books, error } = await supabase
     .from("books")
     .select("slug, created_at");
+
+  if (error) {
+    console.error("Sitemap books query failed:", error);
+  }
 
   const bookPages =
     books?.map((book) => ({
