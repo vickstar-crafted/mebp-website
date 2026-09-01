@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -8,17 +9,145 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
+export const metadata: Metadata = {
+  title:
+    "About Model Educational Book Publishers | MEBP Nigeria",
+
+  description:
+    "Learn about Model Educational Book Publishers Limited, an educational publishing company established in 2007 providing quality and affordable educational books for Nursery and Primary School learners in Nigeria.",
+
+  keywords: [
+    "Model Educational Book Publishers",
+    "MEBP",
+    "MEBP Nigeria",
+    "Educational Publishers Nigeria",
+    "Educational Publishing Company Nigeria",
+    "Educational Books Nigeria",
+    "Primary School Books Nigeria",
+    "Nursery School Books Nigeria",
+    "Children's Educational Books Nigeria",
+  ],
+
+  alternates: {
+    canonical: "/about",
+  },
+
+  openGraph: {
+    title:
+      "About Model Educational Book Publishers | MEBP Nigeria",
+
+    description:
+      "Learn about Model Educational Book Publishers Limited and our commitment to quality, accessible and affordable educational resources for young learners in Nigeria.",
+
+    url: "/about",
+
+    siteName: "Model Educational Book Publishers",
+
+    locale: "en_NG",
+
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+
+    title:
+      "About Model Educational Book Publishers | MEBP Nigeria",
+
+    description:
+      "Learn about Model Educational Book Publishers Limited and our commitment to quality educational resources for young learners in Nigeria.",
+  },
+};
+
 export default function AboutPage() {
+  const organizationStructuredData = {
+    "@context": "https://schema.org",
+
+    "@type": "Organization",
+
+    name: "Model Educational Book Publishers Limited",
+
+    alternateName: "MEBP",
+
+    url: "https://www.mebpbooks.com/",
+
+    foundingDate: "2007-03-20",
+
+    description:
+      "Model Educational Book Publishers Limited provides accessible, affordable and quality educational resources for Nursery and Primary School learners.",
+
+    knowsAbout: [
+      "Educational Publishing",
+      "Educational Books",
+      "Nursery School Learning Resources",
+      "Primary School Learning Resources",
+      "Mathematics Education",
+      "English Education",
+      "Handwriting Education",
+      "Verbal Reasoning",
+      "Quantitative Reasoning",
+      "Educational Storybooks",
+    ],
+  };
+
+  const aboutPageStructuredData = {
+    "@context": "https://schema.org",
+
+    "@type": "AboutPage",
+
+    name: "About Model Educational Book Publishers Limited",
+
+    description:
+      "Learn about Model Educational Book Publishers Limited, an educational publishing company established in 2007.",
+
+    url: "https://www.mebpbooks.com/about",
+
+    isPartOf: {
+      "@type": "WebSite",
+
+      name: "Model Educational Book Publishers",
+
+      url: "https://www.mebpbooks.com/",
+    },
+
+    about: {
+      "@type": "Organization",
+
+      name: "Model Educational Book Publishers Limited",
+
+      url: "https://www.mebpbooks.com/",
+    },
+  };
+
   return (
     <>
       <Navbar />
 
       <main className="bg-gray-50">
-        {/* Hero */}
+
+        {/* STRUCTURED DATA */}
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData),
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(aboutPageStructuredData),
+          }}
+        />
+
+        {/* HERO */}
 
         <section className="border-b border-gray-200 bg-white">
           <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+
             <div className="max-w-3xl">
+
               <p className="mb-5 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
                 About MEBP
               </p>
@@ -36,17 +165,22 @@ export default function AboutPage() {
                 educational resources that support learning, creativity
                 and academic excellence.
               </p>
+
             </div>
+
           </div>
         </section>
 
-        {/* Our Story */}
+        {/* OUR STORY */}
 
         <section className="bg-gray-50">
+
           <div className="mx-auto grid max-w-7xl gap-14 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
-            {/* Left */}
+
+            {/* LEFT */}
 
             <div>
+
               <p className="mb-5 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
                 Our Story
               </p>
@@ -59,6 +193,7 @@ export default function AboutPage() {
               </h2>
 
               <div className="mt-8 space-y-5 text-base leading-8 text-gray-600">
+
                 <p>
                   Model Educational Book Publishers Limited (MEBP)
                   was established on 20th March 2007 with a commitment
@@ -77,12 +212,15 @@ export default function AboutPage() {
                   an important role in building confident learners and
                   creating stronger foundations for the future.
                 </p>
+
               </div>
+
             </div>
 
-            {/* Right */}
+            {/* RIGHT */}
 
             <div className="relative overflow-hidden rounded-3xl bg-green-700 p-10 text-white shadow-lg md:p-14">
+
               <BookOpen
                 size={48}
                 className="mb-10 opacity-90"
@@ -103,15 +241,21 @@ export default function AboutPage() {
                 creating educational resources that help children
                 learn, grow and succeed.
               </p>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* Purpose */}
+        {/* PURPOSE */}
 
         <section className="border-y border-gray-200 bg-white">
+
           <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+
             <div className="mx-auto mb-14 max-w-2xl text-center">
+
               <p className="mb-5 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
                 What Guides Us
               </p>
@@ -124,12 +268,15 @@ export default function AboutPage() {
                 Everything we create is guided by our commitment to
                 education, creativity and quality learning.
               </p>
+
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-              {/* Mission */}
+
+              {/* MISSION */}
 
               <div className="rounded-2xl border border-gray-200 bg-gray-50 p-8 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
                 <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-700">
                   <Target size={24} />
                 </div>
@@ -143,11 +290,13 @@ export default function AboutPage() {
                   educational publications that support learning,
                   creativity and academic excellence.
                 </p>
+
               </div>
 
-              {/* Vision */}
+              {/* VISION */}
 
               <div className="rounded-2xl border border-gray-200 bg-gray-50 p-8 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
                 <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-700">
                   <Eye size={24} />
                 </div>
@@ -162,11 +311,13 @@ export default function AboutPage() {
                   knowledge that transforms lives and shapes the
                   future.
                 </p>
+
               </div>
 
-              {/* Corporate Statement */}
+              {/* PROMISE */}
 
               <div className="rounded-2xl border border-gray-200 bg-gray-50 p-8 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+
                 <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-700">
                   <Heart size={24} />
                 </div>
@@ -181,16 +332,23 @@ export default function AboutPage() {
                   that inspire learning and help equip readers for
                   success.
                 </p>
+
               </div>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* Statistics */}
+        {/* STATISTICS */}
 
         <section className="bg-green-700">
+
           <div className="mx-auto max-w-7xl px-6 py-14">
+
             <div className="grid gap-10 text-center text-white sm:grid-cols-2 lg:grid-cols-4">
+
               <div>
                 <p className="text-4xl font-bold">
                   19+
@@ -230,15 +388,21 @@ export default function AboutPage() {
                   School Learning Resources
                 </p>
               </div>
+
             </div>
+
           </div>
+
         </section>
 
         {/* CTA */}
 
         <section className="bg-gray-50">
+
           <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm ring-1 ring-gray-200 md:p-16">
+
               <p className="text-xs font-bold uppercase tracking-[0.25em] text-green-700">
                 Explore MEBP
               </p>
@@ -260,9 +424,13 @@ export default function AboutPage() {
 
                 <ArrowRight size={18} />
               </Link>
+
             </div>
+
           </div>
+
         </section>
+
       </main>
     </>
   );
