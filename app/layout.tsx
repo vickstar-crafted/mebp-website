@@ -1,7 +1,6 @@
 import { CustomerProvider } from "@/context/CustomerContext";
 import { CartProvider } from "@/context/CartContext";
 import SiteFooter from "@/components/SiteFooter";
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -93,12 +92,53 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Model Educational Book Publishers Limited",
+    alternateName: "MEBP",
+    url: "https://www.mebpbooks.com",
+    logo: "https://www.mebpbooks.com/icon.png",
+    description:
+      "Model Educational Book Publishers Limited provides quality, accessible and affordable educational books for nursery and primary school learners in Nigeria.",
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Model Educational Book Publishers",
+    alternateName: "MEBP",
+    url: "https://www.mebpbooks.com",
+    description:
+      "Quality educational books for nursery and primary school learners in Nigeria.",
+    publisher: {
+      "@type": "Organization",
+      name: "Model Educational Book Publishers Limited",
+    },
+  };
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Organization structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+
+        {/* Website structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+
         <CartProvider>
           <CustomerProvider>
             <main className="flex-1">
