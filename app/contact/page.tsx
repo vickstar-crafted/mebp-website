@@ -11,8 +11,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contact Model Educational Book Publishers | MEBP Nigeria",
+
   description:
     "Contact Model Educational Book Publishers Limited in Lagos, Nigeria for enquiries about educational books, school learning resources, orders, and distribution.",
+
   keywords: [
     "Contact MEBP",
     "Model Educational Book Publishers contact",
@@ -23,18 +25,21 @@ export const metadata: Metadata = {
     "Nursery School Books Nigeria",
     "MEBP Nigeria",
   ],
+
   alternates: {
-    canonical: "https://mebpbooks.com/contact",
+    canonical: "https://www.mebpbooks.com/contact",
   },
+
   openGraph: {
     title: "Contact Model Educational Book Publishers | MEBP Nigeria",
     description:
       "Get in touch with Model Educational Book Publishers Limited in Lagos for enquiries, educational books, school learning resources, and orders.",
-    url: "https://mebpbooks.com/contact",
+    url: "https://www.mebpbooks.com/contact",
     siteName: "Model Educational Book Publishers",
     type: "website",
     locale: "en_NG",
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Contact Model Educational Book Publishers | MEBP Nigeria",
@@ -55,7 +60,8 @@ export default function ContactPage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Model Educational Book Publishers Limited",
-    url: "https://mebpbooks.com",
+    alternateName: "MEBP",
+    url: "https://www.mebpbooks.com",
     email: "mailto:mebpubltd@gmail.com",
     telephone: phoneNumbers.map((phone) => `+234${phone.slice(1)}`),
     address: {
@@ -72,7 +78,7 @@ export default function ContactPage() {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     name: "Contact Model Educational Book Publishers",
-    url: "https://mebpbooks.com/contact",
+    url: "https://www.mebpbooks.com/contact",
     description:
       "Contact page for Model Educational Book Publishers Limited in Lagos, Nigeria.",
     mainEntity: organizationSchema,
@@ -82,6 +88,7 @@ export default function ContactPage() {
     <>
       <Navbar />
 
+      {/* Contact Page structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -89,6 +96,7 @@ export default function ContactPage() {
         }}
       />
 
+      {/* Organization structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
