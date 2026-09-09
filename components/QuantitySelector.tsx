@@ -10,7 +10,7 @@ type QuantitySelectorProps = {
 export default function QuantitySelector({
   quantity,
   onChange,
-  min = 1,
+  min = 5,
   size = "md",
 }: QuantitySelectorProps) {
   const sizes = {

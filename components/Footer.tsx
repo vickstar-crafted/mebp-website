@@ -22,12 +22,12 @@ export default function Footer() {
               aria-label="MEBP Home"
             >
               <Image
-  src="/mebp-logo.jpeg"
-  alt="Model Educational Book Publishers Limited"
-  width={240}
-  height={60}
-  className="h-12 w-auto object-contain"
-/>
+                src="/mebp-logo.jpeg"
+                alt="Model Educational Book Publishers Limited"
+                width={240}
+                height={60}
+                className="h-12 w-auto object-contain"
+              />
             </Link>
 
             <p className="mt-5 max-w-sm text-sm leading-7 text-gray-600">
@@ -95,7 +95,7 @@ export default function Footer() {
                 />
 
                 <p className="leading-6">
-                  19, Eyiowuawi Street,
+                  6, Kalejaiye Street,
                   <br />
                   Pedro, Somolu,
                   <br />

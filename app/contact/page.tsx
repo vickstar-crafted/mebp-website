@@ -63,10 +63,12 @@ export default function ContactPage() {
     alternateName: "MEBP",
     url: "https://www.mebpbooks.com",
     email: "mailto:mebpubltd@gmail.com",
-    telephone: phoneNumbers.map((phone) => `+234${phone.slice(1)}`),
+    telephone: phoneNumbers.map(
+      (phone) => `+234${phone.slice(1)}`
+    ),
     address: {
       "@type": "PostalAddress",
-      streetAddress: "19, Eyiowuawi Street",
+      streetAddress: "6, Kalejaiye Street",
       addressLocality: "Pedro, Somolu",
       addressRegion: "Lagos",
       addressCountry: "NG",
@@ -128,6 +130,7 @@ export default function ContactPage() {
         <section className="bg-white">
           <div className="mx-auto max-w-7xl px-6 py-20">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
               {/* Address */}
               <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md">
                 <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-700">
@@ -139,7 +142,7 @@ export default function ContactPage() {
                 </h2>
 
                 <p className="mt-4 leading-7 text-gray-600">
-                  19, Eyiowuawi Street,
+                  6, Kalejaiye Street,
                   <br />
                   Pedro, Somolu,
                   <br />

@@ -35,6 +35,8 @@ type CartContextType = {
 const CartContext =
   createContext<CartContextType | null>(null);
 
+const MINIMUM_ORDER_QUANTITY = 5;
+
 export function CartProvider({
   children,
 }: {
@@ -53,7 +55,31 @@ export function CartProvider({
       localStorage.getItem("mebp-cart");
 
     if (savedCart) {
-      setCart(JSON.parse(savedCart));
+      try {
+        const parsedCart: CartItem[] =
+          JSON.parse(savedCart);
+
+        // Ensure every existing saved item
+        // follows the new minimum quantity rule.
+        const normalizedCart = parsedCart.map(
+          (item) => ({
+            ...item,
+            quantity: Math.max(
+              MINIMUM_ORDER_QUANTITY,
+              item.quantity
+            ),
+          })
+        );
+
+        setCart(normalizedCart);
+      } catch (error) {
+        console.error(
+          "Failed to load saved cart:",
+          error
+        );
+
+        localStorage.removeItem("mebp-cart");
+      }
     }
 
     setMounted(true);
@@ -75,19 +101,35 @@ export function CartProvider({
         (book) => book.id === item.id
       );
 
+      // Always enforce the minimum quantity
+      // when a new item is added.
+      const incomingQuantity = Math.max(
+        MINIMUM_ORDER_QUANTITY,
+        item.quantity
+      );
+
       if (existing) {
         return current.map((book) =>
           book.id === item.id
             ? {
                 ...book,
                 quantity:
-                  book.quantity + item.quantity,
+                  Math.max(
+                    MINIMUM_ORDER_QUANTITY,
+                    book.quantity
+                  ) + incomingQuantity,
               }
             : book
         );
       }
 
-      return [...current, item];
+      return [
+        ...current,
+        {
+          ...item,
+          quantity: incomingQuantity,
+        },
+      ];
     });
   };
 
@@ -100,7 +142,10 @@ export function CartProvider({
         item.id === id
           ? {
               ...item,
-              quantity: Math.max(1, quantity),
+              quantity: Math.max(
+                MINIMUM_ORDER_QUANTITY,
+                quantity
+              ),
             }
           : item
       )

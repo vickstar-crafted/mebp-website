@@ -32,12 +32,12 @@ export default function QuickAddModal({
 }: QuickAddModalProps) {
   const { addToCart } = useCart();
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(5);
 
   // Reset quantity whenever the modal opens
   useEffect(() => {
     if (open) {
-      setQuantity(1);
+      setQuantity(5);
     }
   }, [open]);
 
@@ -72,6 +72,7 @@ export default function QuickAddModal({
         <QuantitySelector
           quantity={quantity}
           onChange={setQuantity}
+          min={5}
           size="sm"
         />
       </div>
@@ -101,7 +102,7 @@ export default function QuickAddModal({
               quantity
             );
 
-            setQuantity(1);
+            setQuantity(5);
 
             onClose();
           }}

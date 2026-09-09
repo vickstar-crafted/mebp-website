@@ -17,7 +17,7 @@ export default function AddToCart({
   slug: string;
   category_name: string;
 }) {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(5);
   const [added, setAdded] = useState(false);
 
   const { addToCart } = useCart();
@@ -34,7 +34,6 @@ export default function AddToCart({
       )}
 
       <div className="flex items-end gap-4 mt-6">
-
         <div>
           <p className="font-medium text-gray-700 mb-2">
             Quantity
@@ -43,6 +42,7 @@ export default function AddToCart({
           <QuantitySelector
             quantity={quantity}
             onChange={setQuantity}
+            min={5}
           />
         </div>
 
@@ -63,24 +63,19 @@ export default function AddToCart({
             }, 3000);
           }}
           className="
-  bg-green-700
-  text-white
-  px-6
-  py-3
-  rounded-xl
-
-  hover:bg-green-800
-
-  active:scale-[0.98]
-
-  transition-all
-
-  duration-200
-"
+            bg-green-700
+            text-white
+            px-6
+            py-3
+            rounded-xl
+            hover:bg-green-800
+            active:scale-[0.98]
+            transition-all
+            duration-200
+          "
         >
           Add to Cart
         </button>
-
       </div>
     </>
   );
