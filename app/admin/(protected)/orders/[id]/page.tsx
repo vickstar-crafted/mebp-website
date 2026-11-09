@@ -1,5 +1,7 @@
+
 import { getOrderById } from "@/lib/services/admin";
 import { notFound } from "next/navigation";
+import OrderStatusEditor from "./OrderStatusEditor";
 
 type PageProps = {
   params: Promise<{
@@ -12,7 +14,13 @@ export default async function OrderPage({
 }: PageProps) {
   const { id } = await params;
 
-  const order = await getOrderById(Number(id));
+  const orderId = Number(id);
+
+  if (!Number.isInteger(orderId) || orderId <= 0) {
+    notFound();
+  }
+
+  const order = await getOrderById(orderId);
 
   if (!order) {
     notFound();
@@ -32,14 +40,14 @@ export default async function OrderPage({
         </p>
       </div>
 
-      {/* Customer */}
+      {/* Customer Information */}
 
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <h2 className="mb-5 text-xl font-semibold text-gray-900">
           Customer Information
         </h2>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {/* Customer */}
 
           <div>
@@ -76,21 +84,9 @@ export default async function OrderPage({
             </p>
           </div>
 
-          {/* Status */}
-
-          <div>
-            <p className="text-sm font-medium text-gray-700">
-              Status
-            </p>
-
-            <span className="mt-1 inline-flex rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800">
-              {order.status}
-            </span>
-          </div>
-
           {/* Delivery Address */}
 
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <p className="text-sm font-medium text-gray-700">
               Delivery Address
             </p>
@@ -102,45 +98,54 @@ export default async function OrderPage({
         </div>
       </div>
 
-      {/* Books */}
+      {/* Order Status Management */}
+
+      <OrderStatusEditor
+        orderId={order.id}
+        currentStatus={order.status}
+      />
+
+      {/* Books Ordered */}
 
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <h2 className="mb-5 text-xl font-semibold text-gray-900">
           Books Ordered
         </h2>
 
-        <table className="w-full text-gray-900">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="py-3 text-left font-semibold text-gray-900">
-                Book
-              </th>
+        <div className="overflow-x-auto">
+          <table className="w-full text-gray-900">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="py-3 text-left font-semibold text-gray-900">
+                  Book
+                </th>
 
-              <th className="py-3 text-center font-semibold text-gray-900">
-                Quantity
-              </th>
-            </tr>
-          </thead>
+                <th className="py-3 text-center font-semibold text-gray-900">
+                  Quantity
+                </th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {order.enquiry_items.map(
-              (item: any, index: number) => (
-                <tr
-                  key={`${item.book?.id}-${index}`}
-                  className="border-b border-gray-200"
-                >
-                  <td className="py-4 text-gray-900">
-                    {item.book?.title}
-                  </td>
+            <tbody>
+              {order.enquiry_items.map(
+                (item: any, index: number) => (
+                  <tr
+                    key={`${item.book?.id ?? index}-${index}`}
+                    className="border-b border-gray-200"
+                  >
+                    <td className="py-4 text-gray-900">
+                      {item.book?.title ?? "Book unavailable"}
+                    </td>
 
-                  <td className="py-4 text-center text-gray-900">
-                    {item.quantity}
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
+                    <td className="py-4 text-center text-gray-900">
+                      {item.quantity}
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Summary */}
@@ -169,9 +174,7 @@ export default async function OrderPage({
             <strong className="font-semibold text-gray-900">
               Created:
             </strong>{" "}
-            {new Date(
-              order.created_at
-            ).toLocaleString()}
+            {new Date(order.created_at).toLocaleString()}
           </p>
         </div>
       </div>
