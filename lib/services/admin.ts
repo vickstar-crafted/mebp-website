@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase-server";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export async function getOrders() {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
 
   const { data, error } = await supabase
     .from("enquiries")
@@ -29,11 +29,7 @@ export async function getOrders() {
 }
 
 export async function getOrderById(id: number) {
-  const supabase = await createClient();
-
-  // ----------------------------------
-  // 1. Fetch the order
-  // ----------------------------------
+  const { supabase } = await requireAdmin();
 
   const { data: order, error: orderError } = await supabase
     .from("enquiries")
@@ -53,16 +49,16 @@ export async function getOrderById(id: number) {
     .single();
 
   if (orderError) {
+    if (orderError.code === "PGRST116") {
+      return null;
+    }
+
     throw new Error(orderError.message);
   }
 
   if (!order) {
     return null;
   }
-
-  // ----------------------------------
-  // 2. Fetch enquiry items
-  // ----------------------------------
 
   const { data: items, error: itemsError } = await supabase
     .from("enquiry_items")
@@ -76,23 +72,12 @@ export async function getOrderById(id: number) {
     throw new Error(itemsError.message);
   }
 
-  console.log("ITEMS");
-  console.dir(items, { depth: null });
-
-  // ----------------------------------
-  // 3. No books?
-  // ----------------------------------
-
   if (!items || items.length === 0) {
     return {
       ...order,
       enquiry_items: [],
     };
   }
-
-  // ----------------------------------
-  // 4. Fetch all books
-  // ----------------------------------
 
   const bookIds = items.map((item) => item.book_id);
 
@@ -110,20 +95,12 @@ export async function getOrderById(id: number) {
     throw new Error(booksError.message);
   }
 
-  console.log("BOOKS");
-  console.dir(books, { depth: null });
-
-  // ----------------------------------
-  // 5. Merge books into items
-  // ----------------------------------
-
   const enquiry_items = items.map((item) => ({
     quantity: item.quantity,
-    book: books?.find((book) => book.id === item.book_id),
+    book: books?.find(
+      (book) => book.id === item.book_id
+    ),
   }));
-
-  console.log("FINAL");
-  console.dir(enquiry_items, { depth: null });
 
   return {
     ...order,
@@ -135,7 +112,7 @@ export async function updateOrderStatus(
   id: number,
   status: string
 ) {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
 
   const { error } = await supabase
     .from("enquiries")

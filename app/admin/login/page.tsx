@@ -8,6 +8,8 @@ import Label from "@/components/ui/Label";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
+const ADMIN_EMAIL = "admin@modeleducationalbooks.com";
+
 export default function AdminLoginPage() {
   const supabase = createClient();
   const router = useRouter();
@@ -24,23 +26,34 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const normalizedEmail = email.trim().toLowerCase();
 
-    setLoading(false);
-
-    if (error) {
-      setError(error.message);
+    if (normalizedEmail !== ADMIN_EMAIL) {
+      setError("Invalid email or password.");
+      setLoading(false);
       return;
     }
 
-    router.push("/admin");
+    const { data, error: loginError } =
+      await supabase.auth.signInWithPassword({
+        email: normalizedEmail,
+        password,
+      });
+
+    if (loginError || data.user?.email?.toLowerCase() !== ADMIN_EMAIL) {
+      await supabase.auth.signOut();
+
+      setError("Invalid email or password.");
+      setLoading(false);
+      return;
+    }
+
+    router.replace("/admin");
+    router.refresh();
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
         <h1 className="mb-2 text-center text-3xl font-bold text-green-700">
           MEBP Admin
